@@ -22,15 +22,16 @@ ringdats[2] = ringdats[2] / ringdats[2].sum()
 p6cs = [r[4] for r in ringdats]
 p6cs.extend([0,1])
 
-clrs = get_cm(p6cs,cmap_str='inferno')
+clrs = get_cm(p6cs,cmap_str='inferno',max_val=1.0)
 
 labels = ['PixelCNN', '$\\tilde{T} = 0.6$', '$\\tilde{T} = 0.5$']
 
 setup_tex()
-fig, ax = plt.subplots()
+fig, axs = plt.subplots(3,1,sharex=True)
 
-for d, c, l in zip(datadirs,clrs,labels):
-    rgyrs = np.hstack([np.load(f) for f in glob(percdir+d+'rgyrs/*npy')])
-    fig, ax = histogram(rgyrs,nbins=100,plt_objs=(fig,ax),show=False,xlabel='$R_g$ [\AA]', kwargs={'alpha':0.6, 'color':c, 'label':l},density=True)
+for k, d, c, l in zip(range(3),datadirs,clrs,labels):
+    rgyrs = np.hstack([np.load(f) for f in glob(percdir+d+'rgyrs/virtual/*npy')])
+    fig, axs[k] = histogram(rgyrs,nbins=100,plt_objs=(fig,axs[k]),show=False,xlabel='$R_g$ [\AA]', plt_kwargs={'color':c, 'label':l},density=True)
+    axs[k].legend()
 
 plt.show()
